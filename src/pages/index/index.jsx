@@ -1,32 +1,45 @@
-import React, { Component } from 'react'
-import { View, Text } from '@tarojs/components'
+import React, { Component } from "react";
+import Taro from '@tarojs/taro'
+import { View } from "@tarojs/components";
 import { AtButton } from 'taro-ui'
 
-import "taro-ui/dist/style/components/button.scss" // 按需引入
-import './index.scss'
+import "taro-ui/dist/style/components/button.scss"; // 按需引入
+import "./index.scss";
 
 export default class Index extends Component {
 
-  componentWillMount () { }
 
-  componentDidMount () { }
+  componentWillMount() {}
 
-  componentWillUnmount () { }
+  componentDidMount() {}
 
-  componentDidShow () { }
+  componentWillUnmount() {}
 
-  componentDidHide () { }
+  componentDidShow() {}
 
-  render () {
+  componentDidHide() {}
+
+
+
+
+
+  toPublish = () => {
+    console.log('页面跳转');
+    this.closeModal
+    Taro.navigateTo({
+      url:'/pages/publish/publish'
+    })
+  };
+
+  render() {
+
     return (
       <View className='index'>
-        <Text>Hello world!</Text>
-        <AtButton type='primary'>I need Taro UI</AtButton>
-        <Text>Taro UI 支持 Vue 了吗？</Text>
-        <AtButton type='primary' circle={true}>支持</AtButton>
-        <Text>共建？</Text>
-        <AtButton type='secondary' circle={true}>来</AtButton>
+        <View className='Order'>
+        <AtButton style='text-align:center' type='primary' size='mini' circle='true' full='true' onClick={this.toPublish}>发布订单</AtButton>
+        </View>
+
       </View>
-    )
+    );
   }
 }
