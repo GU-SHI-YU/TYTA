@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View } from '@tarojs/components'
-import { AtSegmentedControl } from 'taro-ui'
+import { AtInput, AtForm,AtButton } from 'taro-ui'
 
 import "taro-ui/dist/style/components/button.scss" // 按需引入
 
@@ -11,10 +11,16 @@ export default class Publish_kd extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      flag: true,//我发布的
-      current:0
+      fee: '',
+      areaNumber:'',
+      floorNumber:'',
+      pick_up_addr:'',
+      pick_up_num:'',
+      receive_date:''
     }
   }
+
+
 
   componentWillMount () { }
 
@@ -22,46 +28,111 @@ export default class Publish_kd extends Component {
 
   componentWillUnmount () { }
 
+  handleChange = () => {
+    this.setState({
+      fee,
+      areaNumber,
+      floorNumber,
+      pick_up_addr,
+      pick_up_num,
+      receive_date
+
+    })
+    return {fee,areaNumber,floorNumber,pick_up_addr,pick_up_num,receive_date}
+  }
+
+  handleCheckBox = () => {
+
+  }
   componentDidShow () { }
 
   componentDidHide () { }
 
 
-  handleClick () {
-    if(this.state.flag) {
-      this.setState({
-        current:1,
-        flag:false
-      })
-    }
-    else {
-      this.setState({
-        current:0,
-        flag:true
-      })
-    }
-
+  onSubmit =() =>{
+    console.log(this.state.value)
+  }
+  onReset =() =>{
+    this.setState({
+      fee: '',
+      areaNumber:'',
+      floorNumber:'',
+      pick_up_addr:'',
+      pick_up_num:'',
+      receive_date:''
+    })
+    return {fee,areaNumber,floorNumber,pick_up_addr,pick_up_num,receive_date}
   }
 
+  handleSubmit
+
+
   render () {
+    const {fee,areaNumber,floorNumber,pick_up_addr,pick_up_num,receive_date} = this.state
+    //console.log(fee)
     return (
 
       <View className='publish_kd'>
-      <AtSegmentedControl
-        values={['我发布的', '我接受的']}
-        onClick={this.handleClick.bind(this)}
-        current={this.state.current}
-      />
-      {
-        this.state.current === 0
-        ? <View className='tab-content'>我发布的</View>
-        : null
-      }
-      {
-        this.state.current === 1
-        ? <View className='tab-content'>我接受的</View>
-        : null
-      }
+        <AtForm
+          onSubmit={this.onSubmit.bind(this)}
+          onReset={this.onReset.bind(this)}
+        >
+        <AtInput
+          name='fee'
+          title='费用'
+          type='number'
+          placeholder='不小于0的数'
+          value={this.state.fee}
+          onChange={this.handleChange.bind(this)}
+        />
+
+        <AtInput
+          name='areaNumber'
+          title='宿舍区'
+          type='text'
+          placeholder='例：东n舍'
+          value={this.state.areaNumber}
+          onChange={this.handleChange.bind(this)}
+        />
+
+        <AtInput
+          name='floorNumber'
+          title='楼栋'
+          type='text'
+          placeholder='例：510室'
+          value={this.state.floorNumber}
+          onChange={this.handleChange.bind(this)}
+        />
+
+        <AtInput
+          name='pick_up_addr'
+          title='取货地点'
+          type='text'
+          placeholder='例：东三食堂后菜鸟驿站'
+          value={this.state.pick_up_addr}
+          onChange={this.handleChange.bind(this)}
+        />
+
+        <AtInput
+          name='pick_up_num'
+          title='取件号码'
+          type='text'
+          placeholder='例：4396'
+          value={this.state.pick_up_num}
+          onChange={this.handleChange.bind(this)}
+        />
+
+        <AtInput
+          name='receive_date'
+          title='收到日期'
+          type='text'
+          placeholder='期待拿到的时间，例：12月25日晚上六点之前'
+          value={this.state.receive_date}
+          onChange={this.handleChange.bind(this)}
+        />
+        <AtButton formType='submit' >提交</AtButton>
+        <AtButton formType='reset'>重置</AtButton>
+        </AtForm>
       </View>
     )
   }
