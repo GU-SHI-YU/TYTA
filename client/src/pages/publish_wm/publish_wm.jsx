@@ -47,21 +47,21 @@ export default class Publish_wm extends Component {
     return (
 
       <View className='publish_wm'>
-      <AtSegmentedControl
-        values={['我发布的', '我接受的']}
-        onClick={this.handleClick.bind(this)}
-        current={this.state.current}
-      />
-      {
-        this.state.current === 0
-        ? <View className='tab-content'>我发布的</View>
-        : null
-      }
-      {
-        this.state.current === 1
-        ? <View className='tab-content'>我接受的</View>
-        : null
-      }
+        <AtSegmentedControl
+          values={['我发布的', '我接受的']}
+          onClick={this.handleClick.bind(this)}
+          current={this.state.current}
+        />
+        {
+          this.state.current === 0
+          ? <View className='tab-content'>我发布的</View>
+          : null
+        }
+        {
+          this.state.current === 1
+          ? <View className='tab-content'>我接受的</View>
+          : null
+        }
       </View>
     )
   }

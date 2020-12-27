@@ -9,56 +9,64 @@ const db = cloud.database()
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
-  
+  const _ = db.command
+  let res
+
   if (event.type === 1){
     try {
-      return await db.collection('Orderinfo').doc(event.orderid).get({
+       res = await db.collection('Orderinfo').doc(event.orderid).get({
         success: function(res) {
           console.log(res.data)
-          //that.setData({done: res.data.whether})
         }
-      })      
+      })
     } catch (e) {
       console.log(e)
     }
   }
   else if (event.type === 2){
     try {
-      return await db.collection('Orderinfo').where({
-        publish_id: event.userid
+      res = await db.collection('Orderinfo').where({
+        publish_id: _.eq(wxContext.OPENID)
       })
       .get({
         success: function(res) {
           console.log(res.data)
-          //that.setData({done: res.data.whether})
-          
         }
       })
+      res = res.data
     } catch (e) {
       console.log(e)
     }
   }
-  else if (event.type === 3){
+  else if (event.type === 3) {
     try {
-      return await db.collection('Orderinfo').where({
-        recipient_id: event.userid
+      res =  await db.collection('Orderinfo').where({
+        recipient_id: _.eq(wxContext.OPENID)
       })
       .get({
         success: function(res) {
           console.log(res.data)
-          //that.setData({done: res.data.whether})
-          
         }
       })
+      res = res.data
     } catch (e) {
       console.log(e)
     }
   }
-  
-  return {
-    event,
-    openid: wxContext.OPENID,
-    appid: wxContext.APPID,
-    unionid: wxContext.UNIONID,
+  else if (event.type === 4) {
+    try {
+      res =  await db.collection('Orderinfo').where({
+        publish_id: _.neq(wxContext.OPENID)
+      })
+          .get({
+            success: function(res) {
+              console.log(res.data)
+            }
+          })
+      res = res.data
+    } catch (e) {
+      console.log(e)
+    }
   }
+  return res
 }

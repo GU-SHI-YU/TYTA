@@ -7,6 +7,7 @@ export default {
       'pages/publish/publish',
       'pages/publish_kd/publish_kd',
       'pages/publish_wm/publish_wm',
+      'pages/order_info/order_info'
     ],
     window: {
       backgroundTextStyle: 'light',

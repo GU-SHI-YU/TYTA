@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {  View } from '@tarojs/components'
 import { AtList, AtListItem,AtSegmentedControl } from 'taro-ui'
+import Taro from '@tarojs/taro'
 
 import "taro-ui/dist/style/components/button.scss" // 按需引入
 
@@ -12,36 +13,86 @@ export default class My_order extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      flag: true,//我发布的
-      current:0
+      current:0,
+      list: [],
+      listItems: null
     }
   }
 
   componentWillMount () { }
 
-  componentDidMount () { }
+  async componentDidMount () {
+    this.setState({
+      current: 0
+    })
+    await this.getList()
+  }
 
   componentWillUnmount () { }
 
-  componentDidShow () { }
+  async componentDidShow () {
+    await this.getList()
+  }
 
   componentDidHide () { }
 
 
-  handleClick () {
-    if(this.state.flag) {
-      this.setState({
-        current:1,
-        flag:false
-      })
-    }
-    else {
-      this.setState({
-        current:0,
-        flag:true
-      })
-    }
+  handleListItem (_id) {
+    let urlString = '/pages/order_info/order_info' + '?isReceive='
+      + (this.state.current === 0 ? 'false' : 'true') + '&_id='
+      + _id
+    Taro.navigateTo({
+      url: urlString
+    })
+  }
 
+  async getList () {
+    if (this.state.current === 0) {
+      await Taro.cloud.callFunction({
+        name: 'order_display',
+        data: {
+          type: 2
+        }
+      })
+        .then(result => {
+          this.setState({
+            list: result.result
+          })
+        })
+    } else {
+      await Taro.cloud.callFunction({
+        name: 'order_display',
+        data: {
+          type: 3
+        }
+      })
+        .then(result => {
+          this.setState({
+            list: result.result
+          })
+        })
+    }
+    if (this.state.list.length !== 0) {
+      this.setState({
+        listItems: this.state.list.map((item, index) => {
+          return <AtListItem title='订单号'
+                             arrow='right'
+                             onClick={this.handleListItem.bind(this, item._id)}
+                             note={item._id}/>
+        })
+      })
+    }
+    else
+      this.setState({
+        listItems: null
+      })
+  }
+
+  async handleClick (value) {
+    this.setState({
+      current: value
+    })
+    await this.getList()
   }
 
   render () {
@@ -52,26 +103,20 @@ export default class My_order extends Component {
         values={['我发布的', '我接受的']}
         onClick={this.handleClick.bind(this)}
         current={this.state.current}
+        fontSize='60'
       />
       {
         this.state.current === 0
-        ? <AtList>
-        <AtListItem title='订单号' extraText='4' />
-        <AtListItem title='订单状态' extraText='未接受' />
-        <AtListItem title='预期时间' extraText='13：00之前' />
-        <AtListItem title='预期地点' extraText='沁苑东十一栋511室' />
+          ? <AtList>
+            {
+              this.state.listItems ? this.state.listItems : <View>没有发布的订单</View>
+            }
           </AtList>
-        : null
-      }
-      {
-        this.state.current === 1
-        ? <AtList>
-        <AtListItem title='订单号' extraText='19' />
-        <AtListItem title='订单状态' extraText='已完成' />
-        <AtListItem title='预期时间' extraText='12：30之前' />
-        <AtListItem title='预期地点' extraText='沁苑东十一栋510室' />
+          : <AtList>
+            {
+              this.state.listItems ? this.state.listItems : <View>没有接受的订单</View>
+            }
           </AtList>
-        : null
       }
       </View>
     )

@@ -48,12 +48,12 @@ componentDidMount() {
           openModal:false
         })
       }).catch(error =>{
-        console(error)
+        console.log(error)
       })
     }
     console.log(res)
   }).catch(error =>{
-    console(error)
+    console.log(error)
   })
 }
 

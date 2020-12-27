@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { View } from '@tarojs/components'
-import { AtInput, AtForm,AtButton } from 'taro-ui'
+import { AtInput, AtForm, AtButton, AtToast } from 'taro-ui'
 import Taro from '@tarojs/taro'
 
 import "taro-ui/dist/style/components/button.scss" // 按需引入
+import "taro-ui/dist/style/components/toast.scss"
+import "taro-ui/dist/style/components/icon.scss"
 
 import './publish_kd.scss'
 
@@ -44,27 +46,25 @@ export default class Publish_kd extends Component {
   componentDidHide () { }
 
 
-  onSubmit (event) {
-    console.log(1, this.state)
-  }
+  onSubmit () { }
 
-  onReset () {
-    this.setState({
-      pick_up_addr: '',
-      delivery_addr: '',
-      receive_date: '',
-      fee: 0,
-      remarks: '',
-      message: '',
-      _id: ''
-    })
-  }
+  onReset () { }
 
-  handleSubmit (event) {
-    console.log(this.state)
-    this.state._id = Taro.cloud.callFunction({
+  async handleSubmit (event) {
+    await Taro.cloud.callFunction({
       name: "order_publish",
       data: this.state
+    }).then(async res => {
+      await Taro.showToast({
+        title: '下单成功',
+        icon: 'success',
+        duration: 2000,
+        mask: true
+      }).then(async res => {
+        await Taro.navigateBack({
+          delta: 12
+        })
+      })
     })
   }
 
