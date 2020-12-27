@@ -1,11 +1,20 @@
 import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import './app.scss'
 
 class App extends Component {
 
-  componentDidMount () {}
+  componentDidMount () {
+    if(process.env.TARO_ENV === 'weapp') {
+      Taro.cloud.init({
+        traceUser:true
+      })
+    }
 
-  
+
+  }
+
+
 
   componentDidShow () {}
 

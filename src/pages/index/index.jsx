@@ -11,7 +11,24 @@ export default class Index extends Component {
 
   componentWillMount() {}
 
-  componentDidMount() {}
+  async componentDidMount() {
+    const {result} = await Taro.cloud.callFunction({
+      name:'login'
+    })
+    console.log(result)
+
+    Taro.cloud.callFunction({
+      name: 'sum',
+      data: {
+        x: 1,
+        y: 5,
+      }
+    }).then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 
   componentWillUnmount() {}
 
@@ -36,7 +53,7 @@ export default class Index extends Component {
     return (
       <View className='index'>
         <View className='Order'>
-        <AtButton style='text-align:center' type='primary' size='mini' circle='true' full='true' onClick={this.toPublish}>发布订单</AtButton>
+          <AtButton style='text-align:center' type='primary' size='mini' circle='true' full='true' onClick={this.toPublish}>发布订单</AtButton>
         </View>
 
       </View>
