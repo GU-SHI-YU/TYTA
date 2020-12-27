@@ -2,7 +2,7 @@
 const cloud = require('wx-server-sdk')
 
 cloud.init(
-  {env: "tyta-3ggrdov8583a21f6",}
+  {env: cloud.DYNAMIC_CURRENT_ENV}
 )
 const db = cloud.database()
 
@@ -10,7 +10,7 @@ const db = cloud.database()
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   
-  if (event.type == 1){
+  if (event.type === 1){
     try {
       return await db.collection('Orderinfo').doc(event.orderid).get({
         success: function(res) {
@@ -22,7 +22,7 @@ exports.main = async (event, context) => {
       console.log(e)
     }
   }
-  else if (event.type == 2){
+  else if (event.type === 2){
     try {
       return await db.collection('Orderinfo').where({
         publish_id: event.userid
@@ -38,7 +38,7 @@ exports.main = async (event, context) => {
       console.log(e)
     }
   }
-  else if (event.type == 3){
+  else if (event.type === 3){
     try {
       return await db.collection('Orderinfo').where({
         recipient_id: event.userid

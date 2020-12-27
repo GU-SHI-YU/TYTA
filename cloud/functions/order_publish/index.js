@@ -2,7 +2,7 @@
 const cloud = require('wx-server-sdk')
 
 cloud.init(
-  {env: "tyta-3ggrdov8583a21f6",}
+  {env: cloud.DYNAMIC_CURRENT_ENV}
 )
 
 const db = cloud.database()
@@ -10,7 +10,8 @@ const db = cloud.database()
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
-  var orderid;
+  let orderID;
+  let timestamp = Date.parse(new Date());
 
   try {
     return await db.collection("Orderinfo").add({
@@ -18,11 +19,11 @@ exports.main = async (event, context) => {
         publish_id: wxContext.OPENID,//获取操作者_openid的方法
         pick_up_addr: event.pick_up_addr,
         delivery_addr: event.delivery_addr,
-        recieve_date: event.recieve_date,
+        receive_date: event.receive_date,
         fee: event.fee,
         remarks: event.remarks,
         message: event.message,
-        _id: event.recieve_date + event.publish_id,
+        _id: timestamp + wxContext.OPENID,
         whether: 0,
       }, success: res => {
         wx.showToast({
@@ -38,8 +39,8 @@ exports.main = async (event, context) => {
   } catch (e) {
     console.log(e)
   }
-  orderid = db.collection("Orderinfo")._id;
+  orderID = db.collection("Orderinfo")._id;
   return {
-    orderid,
+    orderID: orderID,
   }
 }
