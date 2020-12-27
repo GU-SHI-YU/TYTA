@@ -53,8 +53,7 @@ export default class Index extends Component {
     return (
       <View className='index'>
         <View className='Order'>
-
-        <AtButton style='text-align:center' type='primary' size='mini' circle='true' full='true' onClick={this.toPublish}>发布订单</AtButton>
+          <AtButton style='text-align:center' type='primary' size='mini' circle='true' full='true' onClick={this.toPublish}>发布订单</AtButton>
         </View>
 
       </View>
