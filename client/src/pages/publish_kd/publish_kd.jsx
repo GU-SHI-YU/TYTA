@@ -20,6 +20,7 @@ export default class Publish_kd extends Component {
       fee: 0,
       remarks: '',
       message: '',
+      telNumber: '',
       _id: ''
     }
   }
@@ -126,6 +127,15 @@ export default class Publish_kd extends Component {
             placeholder='包含取货码的短信'
             value={this.state.message}
             onChange={this.handleChange.bind(this, 'message')}
+          />
+
+          <AtInput
+            name='telNumber'
+            title='联系电话'
+            type='text'
+            placeholder='例：12345678911'
+            value={this.state.telNumber}
+            onChange={this.handleChange.bind(this, 'telNumber')}
           />
 
           <AtButton onClick={this.handleSubmit.bind(this)}>提交</AtButton>

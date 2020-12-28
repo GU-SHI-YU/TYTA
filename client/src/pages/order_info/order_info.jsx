@@ -40,6 +40,26 @@ export default class Order_info extends Component {
     })
   }
 
+  async handleReceive () {
+    await Taro.cloud.callFunction({
+      name: 'order_receive',
+      data: {
+        orderid: this.state.info._id
+      }
+    }).then(async res => {
+      await Taro.showToast({
+        title: '接单成功',
+        icon: 'success',
+        duration: 2000,
+        mask: true
+      }).then(async res => {
+        await Taro.navigateBack({
+          delta: 1
+        })
+      })
+    })
+  }
+
   async handleDelivery () {
     await Taro.cloud.callFunction({
       name: 'order_delivery',
@@ -91,11 +111,14 @@ export default class Order_info extends Component {
           <AtListItem title='预期地点' extraText={this.state.info.delivery_addr} />
           <AtListItem title='取货地址' extraText={this.state.info.pick_up_addr} />
           <AtListItem title='劳务费' extraText={this.state.info.fee} />
+          <AtListItem title='联系电话' extraText={this.state.info.telNumber} />
         </AtList>
         {
-          this.state.isReceive !== 'true'
-            ? <AtButton onClick={this.handleCancel.bind(this)}>取消</AtButton>
-            : <AtButton onClick={this.handleDelivery.bind(this)}>交付</AtButton>
+           this.state.isReceive === 'true'
+            ? <AtButton onClick={this.handleDelivery.bind(this)}>交付</AtButton>
+            : this.state.isReceive === 'get'
+            ? <AtButton onClick={this.handleReceive.bind(this)}>接单</AtButton>
+            : <AtButton onClick={this.handleCancel.bind(this)}>取消</AtButton>
         }
       </View>
     )

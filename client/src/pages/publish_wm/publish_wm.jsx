@@ -1,20 +1,31 @@
 import React, { Component } from 'react'
 import { View } from '@tarojs/components'
-import { AtSegmentedControl } from 'taro-ui'
+import { AtInput, AtForm, AtButton, AtToast } from 'taro-ui'
+import Taro from '@tarojs/taro'
 
 import "taro-ui/dist/style/components/button.scss" // 按需引入
+import "taro-ui/dist/style/components/toast.scss"
+import "taro-ui/dist/style/components/icon.scss"
 
 import './publish_wm.scss'
 
-export default class Publish_wm extends Component {
+export default class Publish_kd extends Component {
 
   constructor (props) {
     super(props)
     this.state = {
-      flag: true,//我发布的
-      current:0
+      pick_up_addr: '',
+      delivery_addr: '',
+      receive_date: '',
+      fee: 0,
+      remarks: '',
+      message: '',
+      telNumber: '',
+      _id: ''
     }
   }
+
+
 
   componentWillMount () { }
 
@@ -22,46 +33,113 @@ export default class Publish_wm extends Component {
 
   componentWillUnmount () { }
 
+  handleChange (stateName, value) {
+    this.setState({
+      [stateName]: value
+    })
+    return value;
+  }
+
+  handleCheckBox () { }
+
   componentDidShow () { }
 
   componentDidHide () { }
 
 
-  handleClick () {
-    if(this.state.flag) {
-      this.setState({
-        current:1,
-        flag:false
-      })
-    }
-    else {
-      this.setState({
-        current:0,
-        flag:true
-      })
-    }
+  onSubmit () { }
 
+  onReset () { }
+
+  async handleSubmit (event) {
+    await Taro.cloud.callFunction({
+      name: "order_publish",
+      data: this.state
+    }).then(async res => {
+      await Taro.showToast({
+        title: '下单成功',
+        icon: 'success',
+        duration: 2000,
+        mask: true
+      }).then(async res => {
+        await Taro.navigateBack({
+          delta: 12
+        })
+      })
+    })
   }
+
 
   render () {
     return (
 
-      <View className='publish_wm'>
-        <AtSegmentedControl
-          values={['我发布的', '我接受的']}
-          onClick={this.handleClick.bind(this)}
-          current={this.state.current}
-        />
-        {
-          this.state.current === 0
-          ? <View className='tab-content'>我发布的</View>
-          : null
-        }
-        {
-          this.state.current === 1
-          ? <View className='tab-content'>我接受的</View>
-          : null
-        }
+      <View className='publish_kd'>
+        <AtForm>
+          <AtInput
+            name='delivery_addr'
+            title='送货地址'
+            type='text'
+            placeholder='例：东11舍101'
+            value={this.state.delivery_addr}
+            onChange={this.handleChange.bind(this, 'delivery_addr')}
+          />
+
+          <AtInput
+            name='pick_up_addr'
+            title='取货地点'
+            type='text'
+            placeholder='例：东三食堂后菜鸟驿站'
+            value={this.state.pick_up_addr}
+            onChange={this.handleChange.bind(this, 'pick_up_addr')}
+          />
+
+          <AtInput
+            name='receive_date'
+            title='取货时间'
+            type='text'
+            placeholder='期待拿到的时间，例：12月25日晚上六点之前'
+            value={this.state.receive_date}
+            onChange={this.handleChange.bind(this, 'receive_date')}
+          />
+
+          <AtInput
+            name='fee'
+            title='费用'
+            type='number'
+            placeholder='不小于0的数'
+            value={this.state.fee}
+            onChange={this.handleChange.bind(this, 'fee')}
+          />
+
+          <AtInput
+            name='remarks'
+            title='备注'
+            type='text'
+            placeholder='备注'
+            value={this.state.remarks}
+            onChange={this.handleChange.bind(this, 'remarks')}
+          />
+
+          <AtInput
+            name='message'
+            title='短信'
+            type='text'
+            placeholder='包含取货码的短信'
+            value={this.state.message}
+            onChange={this.handleChange.bind(this, 'message')}
+          />
+
+          <AtInput
+            name='telNumber'
+            title='联系电话'
+            type='text'
+            placeholder='例：12345678911'
+            value={this.state.telNumber}
+            onChange={this.handleChange.bind(this, 'telNumber')}
+          />
+
+          <AtButton onClick={this.handleSubmit.bind(this)}>提交</AtButton>
+        </AtForm>
       </View>
     )
   }

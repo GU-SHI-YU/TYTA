@@ -24,9 +24,20 @@ export default class Index extends Component {
 
   componentWillUnmount() {}
 
-  componentDidShow() {}
+  async componentDidShow() {
+    await this.getList()
+  }
 
   componentDidHide() {}
+
+  handleListItem (_id) {
+    let urlString = '/pages/order_info/order_info' + '?isReceive='
+      + 'get' + '&_id='
+      + _id
+    Taro.navigateTo({
+      url: urlString
+    })
+  }
 
  async getList () {
       await Taro.cloud.callFunction({
@@ -36,6 +47,7 @@ export default class Index extends Component {
         }
       })
         .then(result => {
+          console.log(result.result)
           this.setState({
             list: result.result
           })
